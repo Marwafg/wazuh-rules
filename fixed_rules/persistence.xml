@@ -1,0 +1,47 @@
+<group name="persistence,registry,windows">
+
+  <rule id="100060" level="10">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^13$</field>
+    <match>CurrentVersion\Run</match>
+    <description>Registry Run Key modified - possible persistence</description>
+    <mitre><id>T1547.001</id></mitre>
+    <group>persistence,registry_run</group>
+  </rule>
+
+  <rule id="100061" level="13">
+    <if_matched_sid>100060</if_matched_sid>
+    <match>.ps1|.bat|.vbs|.hta|.cmd</match>
+    <description>Registry Run Key points to script file - malicious persistence</description>
+    <mitre><id>T1547.001</id></mitre>
+    <group>persistence,registry_run,script,high_severity</group>
+  </rule>
+
+  <rule id="100062" level="14">
+    <if_matched_sid>100060</if_matched_sid>
+    <match>powershell|cmd.exe|wscript|mshta</match>
+    <description>Registry Run Key points to shell process - malicious persistence</description>
+    <mitre><id>T1547.001</id></mitre>
+    <group>persistence,registry_run,shell,high_severity</group>
+  </rule>
+
+  <rule id="100063" level="8">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^12$</field>
+    <match>AppInit_DLLs</match>
+    <description>AppInit_DLLs registry key modified - DLL persistence technique</description>
+    <mitre><id>T1547.001</id></mitre>
+    <group>persistence,appinit_dll</group>
+  </rule>
+
+  <rule id="100064" level="14">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^13$</field>
+    <match>Winlogon</match>
+    <match>Userinit|Shell</match>
+    <description>Winlogon registry key modified - critical persistence technique</description>
+    <mitre><id>T1547.001</id></mitre>
+    <group>persistence,winlogon,critical_severity</group>
+  </rule>
+
+</group>

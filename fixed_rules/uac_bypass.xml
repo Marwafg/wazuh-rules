@@ -1,0 +1,47 @@
+<group name="uac_bypass,privilege_escalation,windows">
+
+  <rule id="100095" level="14">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^1$</field>
+    <match>fodhelper</match>
+    <match>powershell|cmd.exe</match>
+    <description>UAC Bypass: fodhelper spawned shell - silent privilege escalation</description>
+    <mitre><id>T1548.002</id></mitre>
+    <group>uac_bypass,fodhelper</group>
+  </rule>
+
+  <rule id="100096" level="15" frequency="2" timeframe="60">
+    <if_matched_sid>100095</if_matched_sid>
+    <description>UAC Bypass CONFIRMED: repeated fodhelper execution</description>
+    <mitre><id>T1548.002</id></mitre>
+    <group>uac_bypass,confirmed,critical_severity</group>
+  </rule>
+
+  <rule id="100097" level="13">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^13$</field>
+    <match>ms-settings</match>
+    <match>shell\open\command</match>
+    <description>UAC Bypass: ms-settings registry hijack detected</description>
+    <mitre><id>T1548.002</id></mitre>
+    <group>uac_bypass,registry_hijack</group>
+  </rule>
+
+  <rule id="100098" level="12">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^1$</field>
+    <match>eventvwr</match>
+    <match>powershell|cmd.exe</match>
+    <description>UAC Bypass: eventvwr spawned shell process</description>
+    <mitre><id>T1548.002</id></mitre>
+    <group>uac_bypass,eventvwr</group>
+  </rule>
+
+  <rule id="100099" level="15" frequency="2" timeframe="30">
+    <if_matched_sid>100097</if_matched_sid>
+    <description>UAC Bypass: registry hijack followed by execution</description>
+    <mitre><id>T1548.002</id></mitre>
+    <group>uac_bypass,confirmed,critical_severity</group>
+  </rule>
+
+</group>

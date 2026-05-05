@@ -1,0 +1,49 @@
+<group name="exfiltration,data_transfer,windows">
+
+  <rule id="100090" level="12">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^3$</field>
+    <match>192.168.109.158</match>
+    <description>Outbound connection to Kali attacker IP detected</description>
+    <mitre><id>T1041</id></mitre>
+    <group>exfiltration,kali_connection</group>
+  </rule>
+
+  <rule id="100091" level="13">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^1$</field>
+    <match>Invoke-WebRequest</match>
+    <match>POST</match>
+    <description>PowerShell HTTP POST request - possible data exfiltration</description>
+    <mitre><id>T1041</id></mitre>
+    <group>exfiltration,http_post</group>
+  </rule>
+
+  <rule id="100092" level="10">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^1$</field>
+    <match>certutil</match>
+    <match>-encode</match>
+    <description>certutil encoding detected - possible data staging</description>
+    <mitre><id>T1041</id></mitre>
+    <group>exfiltration,certutil_encode</group>
+  </rule>
+
+  <rule id="100093" level="14" frequency="2" timeframe="60">
+    <if_matched_sid>100090</if_matched_sid>
+    <description>Multiple exfiltration connections to attacker IP</description>
+    <mitre><id>T1041</id></mitre>
+    <group>exfiltration,repeated_transfer,high_severity</group>
+  </rule>
+
+  <rule id="100094" level="11">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^3$</field>
+    <match>powershell</match>
+    <match>Initiated: true</match>
+    <description>PowerShell initiated outbound network connection</description>
+    <mitre><id>T1041</id></mitre>
+    <group>exfiltration,powershell_network</group>
+  </rule>
+
+</group>
